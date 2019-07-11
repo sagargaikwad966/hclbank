@@ -18,10 +18,15 @@ import com.bank.hclbank.service.UserService;
 @RequestMapping("/login")
 public class LoginController 
 {
-	
 	@Autowired
 	UserService userService;
-	
+
+	/**
+	 * This method is used to get user which is existing in the application.
+	 * @param userName to get User for particular credential
+	 * @param password to get User for particular credential
+	 * @return User This returns user object for the given Username & Password
+	 */
 	@GetMapping("/user")
 	public ResponseEntity<?> validateUser(@RequestParam(value="userName") String userName, @RequestParam(value="password") String password)
 	{

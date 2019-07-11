@@ -1,5 +1,6 @@
 package com.bank.hclbank.service;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
@@ -16,7 +17,7 @@ public class AccountService
 	@Autowired
 	AccountRepository accountRepository;
 	
-	public Account createAccount(Account account)
+	public Account createAccount(Account account) throws SQLException
 	{
 		return accountRepository.save(account);
 	}

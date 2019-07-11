@@ -25,6 +25,12 @@ public class TransactionController
 	@Autowired
 	TransactionService transactionService;
 	
+	
+	/**
+	 * This method is used to get all payee list for given user account number
+	 * @param accountNumber to fetch the all payee for this account number
+	 * @return List<Account> This returns List of all Payee Accounts
+	 */	
 	@PostMapping("/getPayee")
 	public ResponseEntity<?> getAllPayeeAccount(@RequestParam(value="accountNumber") Long accountNumber)
 	{
@@ -41,6 +47,13 @@ public class TransactionController
 		return new ResponseEntity<List<Account>>(accountList, HttpStatus.OK);
 	}
 	
+	/**
+	 * This method is used to transfer the fund 
+	 * @param fromAccountNumber to debit fund from this Account
+	 * @param toAccountNumber to credit fund to this Account
+	 * @param transferAmount This is the transfer amount
+	 * @return String This returns message for successful / unsuccessful transaction
+	 */	
 	@PostMapping("/transfer")
 	public String fundTransfer(@RequestParam(value="fromAccountNumber") Long fromAccountNumber, @RequestParam(value="toAccountNumber") Long toAccountNumber, @RequestParam(value="transferAmount") Double transferAmount)
 	{

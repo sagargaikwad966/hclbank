@@ -1,6 +1,7 @@
 package com.bank.hclbank.service;
 
 import java.util.Random;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.persistence.SecondaryTable;
@@ -13,6 +14,7 @@ import org.springframework.util.StringUtils;
 import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.entity.Transaction;
 import com.bank.hclbank.entity.User;
+import com.bank.hclbank.exception.InvalidUserDataException;
 import com.bank.hclbank.repository.AccountRepository;
 import com.bank.hclbank.repository.UserRepository;
 
@@ -30,17 +32,26 @@ public class UserService {
 	@Autowired
 	TransactionService transactionService;
 	
-	
-	public User createUser(User user) throws Exception
+	/**
+	 * This method is used to save user entry in database table user
+	 * @param user to save user entry
+	 * @return User This return User Object which successfully insert
+	 */
+	public User createUser(User user) throws SQLException
 	{
 		return userRepository.save(user);
 	}
 	
-	public Account registerUser(User user) throws Exception 
+	/**
+	 * This method is used to register user and create Bank Account for the user
+	 * @param user to create Account
+	 * @return Account This return Account Object for given user
+	 */
+	public Account registerUser(User user) throws SQLException, InvalidUserDataException 
 	{
 		if(ObjectUtils.isEmpty(createUser(user)))
 		{
-			throw new Exception("User is Not Created successfully : ");	
+			throw new InvalidUserDataException("User is Not Created successfully : ");
 		}
 		
 		Account account = new Account();
@@ -51,6 +62,12 @@ public class UserService {
 		return accountService.createAccount(account);
 	}
 
+	/**
+	 * This method is used to get user which is existing in the application.
+	 * @param userName to get User for particular credential
+	 * @param password to get User for particular credential
+	 * @return User This returns user object for the given Username & Password
+	 */
 	public List<Transaction> validateUser(String userName, String password) throws Exception
 	{
 		User loginUser = userRepository.findByUserNameAndPassword(userName, password);
@@ -72,7 +89,10 @@ public class UserService {
 	}
 
 	
-
+	/**
+	 * This method is used to get user which is existing in the application.
+	 * @return List<User> This returns List of users object
+	 */
 	public List<User> getAllUser() {
 		return userRepository.findAll();
 	}
