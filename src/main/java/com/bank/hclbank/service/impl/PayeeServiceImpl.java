@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.entity.Payee;
@@ -65,6 +66,7 @@ public class PayeeServiceImpl implements PayeeService
 				requestedPayee.setPayerAccountNumber(payeeRequestModel.getPayerAccountNumber());
 				requestedPayee.setStatus("PENDING");
 				payeeRepository.save(requestedPayee);
+	
 			}
 		} else {
 			requestedPayee.setPayeeAccountNumber(payeeRequestModel.getPayeeAccountNumber());
@@ -97,29 +99,23 @@ public class PayeeServiceImpl implements PayeeService
 		return payee;
 
 	}
+	/**
+	 * @param userId
+	 * @return
+	 */
+	public List<Payee> viewBeneficiaries(Long userId){
+		List<Payee> activePayeeList = new ArrayList<Payee>();
 
-		
+		Account account = accountRepository.getAccountForUser(userId);
 
-		
-	@Override
-	public List<Payee> viewBeneficiaries(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
+		if(!ObjectUtils.isEmpty(account)) {
+			List<Payee> payeeList = payeeRepository.getPayeesList(account.getAccountNumber(), "active");
+			for(Payee payee : payeeList) {
+				if(payee.getStatus().equalsIgnoreCase("active")) {
+					activePayeeList.add(payee);
+				}
+			}
+			}
+		return activePayeeList;
 	}
-
-	/*	*//**
-			 * @param userId
-			 * @return
-			 *//*
-				 * public List<Payee> viewBeneficiaries(Long userId){ List<Payee>
-				 * activePayeeList = new ArrayList<Payee>();
-				 * 
-				 * Optional<Account> account = accountRepository.findById(userId);
-				 * 
-				 * if(!ObjectUtils.isEmpty(account)) { List<Payee> payeeList =
-				 * account.get().getPayeeList(); for(Payee payee : payeeList) {
-				 * if(payee.getStatus().equalsIgnoreCase("active")) {
-				 * activePayeeList.add(payee); } } } return activePayeeList; }
-				 */
-
 }
