@@ -1,20 +1,36 @@
 package com.bank.hclbank.entity;
 
+import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import com.bank.hclbank.entity.User;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name="account")
-public class Account 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "accountId")
+public class Account implements Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3304539248658029566L;
+
 	@Id
 	@Column(name="account_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,42 +45,10 @@ public class Account
 	
 	@Column(name="balance", nullable = false)
 	private Double balance;
-
-	public Long getAccountNumber() {
-		return accountNumber;
-	}
-
-	public void setAccountNumber(Long accountNumber) {
-		this.accountNumber = accountNumber;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Double getBalance() {
-		return balance;
-	}
-
-	public void setBalance(Double balance) {
-		this.balance = balance;
-	}
-
-	public Account(Long accountNumber, User user, Double balance) {
-		super();
-		this.accountNumber = accountNumber;
-		this.user = user;
-		this.balance = balance;
-	}
-
-	public Account() {
-		super();
-	}
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "payeeAccount")
+	List<Payee> payeeList;
 	
 	
-
+	
 }
