@@ -38,15 +38,15 @@ public class PayeeServiceImpl implements PayeeService
 	@Autowired
 	PayeeRepository payeeRepository;
 
-	
+
 	public Payee addPayee(PayeeRequestModel payeeRequestModel) throws ApplicationException {
 		List<Payee> payeeList = new ArrayList<>();
 		Payee requestedPayee = new Payee();
-		
+
 		Account payerAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayerAccountNumber());
 
 		Account payeeAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayeeAccountNumber());
-		
+
 		Optional<List<Payee>> payeeListOptional = payeeRepository
 				.findByPayerAccountNumberAndStatus(payerAccount.getAccountNumber(), "ACTIVE");
 
@@ -59,14 +59,14 @@ public class PayeeServiceImpl implements PayeeService
 					.anyMatch(p -> p.getPayeeAccountNumber().equals(payeeRequestModel.getPayeeAccountNumber()));
 			if (isPayee)
 				throw new ApplicationException("The Payee with account " + payeeRequestModel.getPayeeAccountNumber()
-						+ " number already present");
+				+ " number already present");
 			else {
-				
+
 				requestedPayee.setPayeeAccountNumber(payeeRequestModel.getPayeeAccountNumber());
 				requestedPayee.setPayerAccountNumber(payeeRequestModel.getPayerAccountNumber());
 				requestedPayee.setStatus("PENDING");
 				payeeRepository.save(requestedPayee);
-	
+
 			}
 		} else {
 			requestedPayee.setPayeeAccountNumber(payeeRequestModel.getPayeeAccountNumber());
@@ -78,7 +78,7 @@ public class PayeeServiceImpl implements PayeeService
 		return requestedPayee;
 	}
 
-	
+
 
 	@Override
 	public Payee removePayee(Long payeeId) throws ApplicationException {
@@ -102,20 +102,20 @@ public class PayeeServiceImpl implements PayeeService
 	/**
 	 * @param userId
 	 * @return
+	 * @throws ApplicationException 
 	 */
-	public List<Payee> viewBeneficiaries(Long userId){
-		List<Payee> activePayeeList = new ArrayList<Payee>();
+	public List<Payee> viewBeneficiaries(Long userId) throws ApplicationException{
 
 		Account account = accountRepository.getAccountForUser(userId);
 
 		if(!ObjectUtils.isEmpty(account)) {
 			List<Payee> payeeList = payeeRepository.getPayeesList(account.getAccountNumber(), "active");
-			for(Payee payee : payeeList) {
-				if(payee.getStatus().equalsIgnoreCase("active")) {
-					activePayeeList.add(payee);
-				}
+			if(!ObjectUtils.isEmpty(payeeList)) {
+				return payeeList;
+			} else {
+				throw new ApplicationException("No Payees are added yet.");
 			}
-			}
-		return activePayeeList;
+		} else 
+			throw new ApplicationException("No account info found for this user.");
 	}
 }

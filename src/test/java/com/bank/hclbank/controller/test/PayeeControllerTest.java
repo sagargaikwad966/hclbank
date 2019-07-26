@@ -53,7 +53,7 @@ public class PayeeControllerTest {
 	}
 
 	@Test
-	public void viewBeneficiaries() throws ApplicationException {
+	public void testViewBeneficiaries() throws ApplicationException {
 		Payee payee = new Payee();
 		payee.setPayeeAccountNumber(123123L);
 		payee.setPayerAccountNumber(123456L);
@@ -93,4 +93,15 @@ public class PayeeControllerTest {
 			
 	}
 
+	@Test(expected = ApplicationException.class)
+	public void testViewBeneficiariesNegative() throws ApplicationException {
+
+		List<Payee> payeeList = new ArrayList<Payee>();
+		Mockito.when(payeeServiceMock.viewBeneficiaries(1L)).thenReturn(payeeList);
+
+		ResponseEntity<ResponseData> response = payeeControllerMock.viewBeneficiaries(1L);
+
+		assertNotNull(response);
+		assertEquals(400, response.getStatusCodeValue());
+	}
 }
