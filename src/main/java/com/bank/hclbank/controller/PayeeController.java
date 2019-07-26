@@ -32,41 +32,43 @@ public class PayeeController
 	PayeeService payeeService;
 
 
-	
+
 	@PostMapping("/add")
 	public ResponseEntity<ResponseData> addPayee(@RequestBody PayeeRequestModel payeeRequestModel) throws ApplicationException
 	{
 		Payee addPayee = payeeService.addPayee(payeeRequestModel);
 		ResponseData response = new ResponseData("Hi, Payee with account "+payeeRequestModel.getPayeeAccountNumber()+" number requesting, waiting for verification", HttpStatus.OK, addPayee);
 		return new ResponseEntity<>(response, HttpStatus.OK);
-		
+
 	}
 
 
 
-@GetMapping("/viewBeneficiaries/{userId}")
-public ResponseEntity<ResponseData> viewBeneficiaries(@PathVariable(value = "userId") Long userId) throws ApplicationException {
-	ResponseData response = null;
-	List<Payee> activePayeeList = payeeService.viewBeneficiaries(userId);
-	if (!ObjectUtils.isEmpty(activePayeeList)) {
-		response = new ResponseData("The payees are as follows: ", HttpStatus.OK, activePayeeList);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+	@GetMapping("/viewBeneficiaries/{userId}")
+	public ResponseEntity<ResponseData> viewBeneficiaries(@PathVariable(value = "userId") Long userId) throws ApplicationException {
+		ResponseData response = null;
+		List<Payee> activePayeeList;
+		activePayeeList = payeeService.viewBeneficiaries(userId);
+		if (!ObjectUtils.isEmpty(activePayeeList)) {
+			response = new ResponseData("The payees are as follows: ", HttpStatus.OK, activePayeeList);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		}
+		return null;
+
+
+
 	}
-	throw new ApplicationException("User is not valid");
 
-}
+	@DeleteMapping("/removePayee")
+	public ResponseEntity<ResponseData> removePayee(@RequestParam Long payeeId) throws ApplicationException{
 
-@DeleteMapping("/removePayee")
-public ResponseEntity<ResponseData> removePayee(@RequestParam Long payeeId) throws ApplicationException{
+		if(payeeId==null) 
+			throw new ApplicationException("Please provide payee Id to whom you want to remove..");
 
-	if(payeeId==null) 
-		throw new ApplicationException("Please provide payee Id to whom you want to remove..");
-
-	else{
-		Payee payee=payeeService.removePayee(payeeId);
-		ResponseData response = new ResponseData("Find below details of payee id :"+payeeId+" who is removed from the system", HttpStatus.OK,payee);
-		return new ResponseEntity<ResponseData>(response, HttpStatus.OK);
+		else{
+			Payee payee=payeeService.removePayee(payeeId);
+			ResponseData response = new ResponseData("Find below details of payee id :"+payeeId+" who is removed from the system", HttpStatus.OK,payee);
+			return new ResponseEntity<ResponseData>(response, HttpStatus.OK);
+		}
 	}
-}
-
 }

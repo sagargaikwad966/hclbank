@@ -82,6 +82,7 @@ public class PayeeServiceImpl implements PayeeService
 
 	@Override
 	public Payee removePayee(Long payeeId) throws ApplicationException {
+		logger.info("In remove Payee");
 		Payee payee=new Payee();
 		Optional<Payee> payeeList= payeeRepository.findById(payeeId);
 
@@ -95,7 +96,7 @@ public class PayeeServiceImpl implements PayeeService
 			}
 		}
 		else throw new ApplicationException("Please provide valid payee Id to be removed");
-
+		logger.info("Exit from remove Payee");
 		return payee;
 
 	}
@@ -116,6 +117,6 @@ public class PayeeServiceImpl implements PayeeService
 				throw new ApplicationException("No Payees are added yet.");
 			}
 		} else 
-			throw new ApplicationException("No account info found for this user.");
+			throw new ApplicationException("User is invalid.");
 	}
 }

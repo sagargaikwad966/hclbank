@@ -36,7 +36,7 @@ public class AccountServiceImpl implements AccountService
 		return accountRepository.findByUser(user);
 	}
 	@Override
-	public List<Account> getAllPayeeAccount(Long accountNumber) throws Exception
+	public List<Account> getAllPayeeAccount(Long accountNumber) throws ApplicationException
 	{
 		return accountRepository.findByAccountNumberNotIn(accountNumber);
 	}
