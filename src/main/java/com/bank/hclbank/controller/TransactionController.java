@@ -56,9 +56,14 @@ public class TransactionController
 	 * @throws ApplicationException 
 	 */	
 	@PostMapping("/transfer")
-	public String fundTransfer(@RequestParam(value="fromAccountNumber") Long fromAccountNumber, @RequestParam(value="toAccountNumber") Long toAccountNumber, @RequestParam(value="transferAmount") Double transferAmount) throws ApplicationException
+	public ResponseEntity fundTransfer(@RequestParam(value="fromAccountNumber") Long fromAccountNumber, @RequestParam(value="toAccountNumber") Long toAccountNumber, @RequestParam(value="transferAmount") Double transferAmount) throws ApplicationException
 	{
-		return transactionService.fundTransfer(fromAccountNumber, toAccountNumber, transferAmount);
-	}
+		try {
+			return transactionService.fundTransfer(fromAccountNumber, toAccountNumber, transferAmount);
+		} catch (ApplicationException e) {
 
+			return new ResponseEntity<String>("Invalid request : "+e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 }
