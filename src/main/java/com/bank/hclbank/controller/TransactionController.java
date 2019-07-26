@@ -5,13 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bank.hclbank.entity.Account;
+import com.bank.hclbank.exception.ApplicationException;
 import com.bank.hclbank.service.AccountService;
 import com.bank.hclbank.service.TransactionService;
 
@@ -53,9 +53,10 @@ public class TransactionController
 	 * @param toAccountNumber to credit fund to this Account
 	 * @param transferAmount This is the transfer amount
 	 * @return String This returns message for successful / unsuccessful transaction
+	 * @throws ApplicationException 
 	 */	
 	@PostMapping("/transfer")
-	public String fundTransfer(@RequestParam(value="fromAccountNumber") Long fromAccountNumber, @RequestParam(value="toAccountNumber") Long toAccountNumber, @RequestParam(value="transferAmount") Double transferAmount)
+	public String fundTransfer(@RequestParam(value="fromAccountNumber") Long fromAccountNumber, @RequestParam(value="toAccountNumber") Long toAccountNumber, @RequestParam(value="transferAmount") Double transferAmount) throws ApplicationException
 	{
 		return transactionService.fundTransfer(fromAccountNumber, toAccountNumber, transferAmount);
 	}
