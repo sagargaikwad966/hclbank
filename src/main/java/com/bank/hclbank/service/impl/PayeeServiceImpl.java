@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.entity.Payee;
@@ -30,51 +29,54 @@ public class PayeeServiceImpl implements PayeeService
 	AccountService accountService;
 
 	@Autowired
+	PayeeService payeeService;
+
+	@Autowired
 	AccountRepository accountRepository;
 
 	@Autowired
 	PayeeRepository payeeRepository;
 
-	@Override
-	public void addPayee(PayeeRequestModel payeeRequestModel) throws ApplicationException 
-	{
+	
+	public Payee addPayee(PayeeRequestModel payeeRequestModel) throws ApplicationException {
+		List<Payee> payeeList = new ArrayList<>();
+		Payee requestedPayee = new Payee();
+		
 		Account payerAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayerAccountNumber());
 
-		Account payeeeAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayeeAccountNumber());
-		List<Payee> payeeList = null;
+		Account payeeAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayeeAccountNumber());
+		
+		Optional<List<Payee>> payeeListOptional = payeeRepository
+				.findByPayerAccountNumberAndStatus(payerAccount.getAccountNumber(), "ACTIVE");
 
-		System.out.println(payeeList);
+		boolean isOptionalPresent = payeeListOptional.isPresent();
 
-		/*
-		 * boolean isPayee = payeeList.stream().anyMatch(p ->
-		 * p.getPayeeAccount().getAccountNumber().equals(payeeRequestModel.
-		 * getPayeeAccountNumber()));
-		 * 
-		 * logger.debug("IsPresent"+ isPayee); System.out.println(isPayee);
-		 */
+		if (isOptionalPresent) {
+			payeeList = payeeListOptional.get();
 
-
-	}
-
-	/**
-	 * @param userId
-	 * @return
-	 */
-	public List<Payee> viewBeneficiaries(Long userId){
-		List<Payee> activePayeeList = new ArrayList<Payee>();
-
-		Optional<Account> account = accountRepository.findById(userId);
-
-		if(!ObjectUtils.isEmpty(account)) {
-			List<Payee> payeeList = account.get().getPayeeList();
-			for(Payee payee : payeeList) {
-				if(payee.getStatus().equalsIgnoreCase("active")) {
-					activePayeeList.add(payee);
-				}
+			boolean isPayee = payeeList.stream()
+					.anyMatch(p -> p.getPayeeAccountNumber().equals(payeeRequestModel.getPayeeAccountNumber()));
+			if (isPayee)
+				throw new ApplicationException("The Payee with account " + payeeRequestModel.getPayeeAccountNumber()
+						+ " number already present");
+			else {
+				
+				requestedPayee.setPayeeAccountNumber(payeeRequestModel.getPayeeAccountNumber());
+				requestedPayee.setPayerAccountNumber(payeeRequestModel.getPayerAccountNumber());
+				requestedPayee.setStatus("PENDING");
+				payeeRepository.save(requestedPayee);
 			}
+		} else {
+			requestedPayee.setPayeeAccountNumber(payeeRequestModel.getPayeeAccountNumber());
+			requestedPayee.setPayerAccountNumber(payeeRequestModel.getPayerAccountNumber());
+			requestedPayee.setStatus("PENDING");
+			payeeRepository.save(requestedPayee);
+
 		}
-		return activePayeeList;
+		return requestedPayee;
 	}
+
+	
 
 	@Override
 	public Payee removePayee(Long payeeId) throws ApplicationException {
@@ -96,5 +98,28 @@ public class PayeeServiceImpl implements PayeeService
 
 	}
 
-}		
+		
 
+		
+	@Override
+	public List<Payee> viewBeneficiaries(Long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*	*//**
+			 * @param userId
+			 * @return
+			 *//*
+				 * public List<Payee> viewBeneficiaries(Long userId){ List<Payee>
+				 * activePayeeList = new ArrayList<Payee>();
+				 * 
+				 * Optional<Account> account = accountRepository.findById(userId);
+				 * 
+				 * if(!ObjectUtils.isEmpty(account)) { List<Payee> payeeList =
+				 * account.get().getPayeeList(); for(Payee payee : payeeList) {
+				 * if(payee.getStatus().equalsIgnoreCase("active")) {
+				 * activePayeeList.add(payee); } } } return activePayeeList; }
+				 */
+
+}
