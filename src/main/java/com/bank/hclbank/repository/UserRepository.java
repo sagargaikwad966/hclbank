@@ -1,7 +1,5 @@
 package com.bank.hclbank.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.bank.hclbank.entity.User;

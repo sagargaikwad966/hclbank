@@ -52,7 +52,7 @@ public ResponseEntity<ResponseData> viewBeneficiaries(@PathVariable(value = "use
 		response = new ResponseData("The payees are as follows: ", HttpStatus.OK, activePayeeList);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-	throw new ApplicationException();
+	throw new ApplicationException("User is not valid");
 
 }
 
