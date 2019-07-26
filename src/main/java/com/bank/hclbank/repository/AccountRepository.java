@@ -1,6 +1,7 @@
 package com.bank.hclbank.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,6 +14,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 	
 	public List<Account> findByAccountNumberNotIn(Long accountNumber);
 	
-	public Account findByAccountNumber(Long accountNumber);
+	public Optional<Account> findByAccountNumber(Long accountNumber);
 
 }

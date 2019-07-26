@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.entity.User;
+import com.bank.hclbank.exception.ApplicationException;
 
 @Service
 public interface AccountService
@@ -15,7 +16,7 @@ public interface AccountService
 	public void updateAccount(Account account);
 	public Account getAccountByUserId(User user);
 	public List<Account> getAllPayeeAccount(Long accountNumber) throws Exception;
-	public Account getAccountByAccountNumber(Long fromAccountNumber);
+	public Account getAccountByAccountNumber(Long fromAccountNumber) throws ApplicationException;
 	public Long generateAccountNumber();
 	
 }

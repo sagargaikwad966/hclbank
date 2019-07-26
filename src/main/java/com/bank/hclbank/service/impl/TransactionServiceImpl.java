@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.entity.Transaction;
+import com.bank.hclbank.exception.ApplicationException;
 import com.bank.hclbank.repository.TransactionRepository;
 import com.bank.hclbank.service.AccountService;
 import com.bank.hclbank.service.TransactionService;
@@ -37,7 +38,7 @@ public class TransactionServiceImpl implements TransactionService
 
 
 	@Transactional
-	public String fundTransfer(Long fromAccountNumber, Long toAccountNumber, Double transferAmount) {
+	public String fundTransfer(Long fromAccountNumber, Long toAccountNumber, Double transferAmount) throws ApplicationException {
 		
 		Account fromAccount = accountService.getAccountByAccountNumber(fromAccountNumber);
 		
