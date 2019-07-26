@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.omg.IOP.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +15,7 @@ import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.entity.Transaction;
 import com.bank.hclbank.repository.TransactionRepository;
 import com.bank.hclbank.service.AccountService;
+import com.bank.hclbank.service.TransactionService;
 
 @Service
 public class TransactionServiceImpl implements TransactionService

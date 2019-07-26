@@ -1,21 +1,16 @@
 package com.bank.hclbank.service.impl;
 
-import java.util.Random;
 import java.sql.SQLException;
 import java.util.List;
-
-import javax.persistence.SecondaryTable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.entity.Transaction;
 import com.bank.hclbank.entity.User;
 import com.bank.hclbank.exception.InvalidUserDataException;
-import com.bank.hclbank.repository.AccountRepository;
 import com.bank.hclbank.repository.UserRepository;
 import com.bank.hclbank.service.AccountService;
 import com.bank.hclbank.service.TransactionService;
