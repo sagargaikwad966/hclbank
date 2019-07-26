@@ -96,18 +96,16 @@ public class CommunicationUtils {
 		 final String SUCCESS = "SUCCESS";
 			final String FAIL = "FAIL";
 			
-			if(otpnum >= 0){
-				int serverOtp = getOtp(payeeId);
-				if(serverOtp > 0){
-					if(otpnum == serverOtp){
-						clearOTP(payeeId);
-						return (FAIL);
-					}else{
-						return SUCCESS;
-					}
-				}
+			int serverOtp = getOtp(payeeId);
+			if(serverOtp == otpnum)
+				return "SUCCESS";
+			else
+			{
+				clearOTP(payeeId);
+				return "FAIL";
 			}
-			return FAIL;
+
+			
 			
 	 }
 	 

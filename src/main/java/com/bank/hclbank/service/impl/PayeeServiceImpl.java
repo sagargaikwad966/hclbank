@@ -51,7 +51,7 @@ public class PayeeServiceImpl implements PayeeService
 
 		Account payerAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayerAccountNumber());
 
-		Account payeeAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayeeAccountNumber());
+		accountService.getAccountByAccountNumber(payeeRequestModel.getPayeeAccountNumber());
 
 		Optional<List<Payee>> payeeListOptional = payeeRepository
 				.findByPayerAccountNumberAndStatus(payerAccount.getAccountNumber(), "ACTIVE");
@@ -138,7 +138,7 @@ public class PayeeServiceImpl implements PayeeService
 			Account payerAccNo = accountService.getAccountByAccountNumber(payeeOptional.get().getPayerAccountNumber());
 			String payerEmail = payerAccNo.getUser().getEmail();
 
-			Integer otp = communicationUtils.generateOTP(payerAccNo.getUser().getUserId());
+			Integer otp = communicationUtils.generateOTP(payeeId);
 
 			communicationUtils.sendOtpViaMail(payerEmail, "OTP FOR ADDING PAYEE NO. "+payeeId, String.valueOf(otp));
 

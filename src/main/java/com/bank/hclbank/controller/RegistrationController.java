@@ -28,30 +28,20 @@ public class RegistrationController
 	 * @return Account This returns Account object for the register user for successful registration
 	 * @return String This returns Error message for unsuccessful registration
 	 */	
-	@PostMapping("/register")
-	public ResponseEntity<?> registerUser(@RequestBody User user)
-	{
-		Account userAccount = null;
-
-		try
-		{
-			checkUser(user);
-		}
-		catch(InvalidUserDataException e)
-		{
-			return new ResponseEntity<String>("Invalid User Data : "+ e.getCause().getMessage(),HttpStatus.BAD_REQUEST);
-		}
-
-		try
-		{
-			userAccount = userService.registerUser(user);
-		}
-		catch(Exception e)
-		{
-			return new ResponseEntity<String>("Invalid User Data : "+e.getCause().getMessage(),HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<Account>(userAccount, HttpStatus.OK);
-	}
+	/*
+	 * @PostMapping("/register") public ResponseEntity<?> registerUser(@RequestBody
+	 * User user) { Account userAccount = null;
+	 * 
+	 * try { checkUser(user); } catch(InvalidUserDataException e) { return new
+	 * ResponseEntity<String>("Invalid User Data : "+
+	 * e.getCause().getMessage(),HttpStatus.BAD_REQUEST); }
+	 * 
+	 * try { userAccount = userService.registerUser(user); } catch(Exception e) {
+	 * return new
+	 * ResponseEntity<String>("Invalid User Data : "+e.getCause().getMessage(),
+	 * HttpStatus.BAD_REQUEST); } return new ResponseEntity<Account>(userAccount,
+	 * HttpStatus.OK); }
+	 */
 	
 	/**
 	 * This method is used to check user data is valid otherwise throwing InvalidUserDataException

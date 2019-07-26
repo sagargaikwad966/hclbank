@@ -73,7 +73,7 @@ public class PayeeControllerTest {
 
 
 	@Test
-	public void testRemovePayee() throws ApplicationException {
+	public void testRemovePayee() throws ApplicationException, NoSuchAlgorithmException {
 		Long payeeId=1L;
 
 		when(payeeServiceMock.removePayee(payeeId)).thenReturn(payee);
@@ -82,7 +82,7 @@ public class PayeeControllerTest {
 
 	}
 	@Test(expected = ApplicationException.class)
-	public void testRemovePayeeException()throws ApplicationException{
+	public void testRemovePayeeException()throws ApplicationException, NoSuchAlgorithmException{
 		ResponseEntity<ResponseData> response =payeeControllerMock.removePayee(null);
 	}
 

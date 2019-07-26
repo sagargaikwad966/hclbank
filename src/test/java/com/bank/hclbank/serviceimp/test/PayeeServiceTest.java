@@ -26,18 +26,6 @@ import com.bank.hclbank.service.impl.PayeeServiceImpl;
 @RunWith(MockitoJUnitRunner.class)
 public class PayeeServiceTest 
 {
-	@InjectMocks
-	PayeeService payeeService;
-	
-	@Mock
-	AccountService accountServiceMock;
-		
-	
-	@Test
-	public void testAddPayee()
-	{
-		
-	}
 
 	@InjectMocks
 	PayeeServiceImpl payeeServiceImpl;

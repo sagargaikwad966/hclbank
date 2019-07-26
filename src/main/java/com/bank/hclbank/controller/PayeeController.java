@@ -39,7 +39,8 @@ public class PayeeController {
 	public ResponseEntity<ResponseData> addPayee(@RequestBody PayeeRequestModel payeeRequestModel)
 			throws ApplicationException, NoSuchAlgorithmException {
 		Payee addPayee = payeeService.addPayee(payeeRequestModel);
-		Boolean isSend = payeeService.generateOtpForPayerAndSendMail(addPayee.getPayeeId());
+		
+		payeeService.generateOtpForPayerAndSendMail(addPayee.getPayeeId());
 		ResponseData response = new ResponseData("Hi, Payee with account " + payeeRequestModel.getPayeeAccountNumber()
 				+ " number requesting, waiting for verification", HttpStatus.OK, addPayee);
 		return new ResponseEntity<>(response, HttpStatus.OK);
@@ -61,7 +62,7 @@ public class PayeeController {
 	}
 
 	@DeleteMapping("/removePayee")
-	public ResponseEntity<ResponseData> removePayee(@RequestParam Long payeeId) throws ApplicationException {
+	public ResponseEntity<ResponseData> removePayee(@RequestParam Long payeeId) throws ApplicationException, NoSuchAlgorithmException {
 
 		if (payeeId == null)
 			throw new ApplicationException("Please provide payee Id to whom you want to remove..");
@@ -71,7 +72,8 @@ public class PayeeController {
 			ResponseData response = new ResponseData(
 					"Find below details of payee id :" + payeeId + " who is removed from the system", HttpStatus.OK,
 					payee);
-			return new ResponseEntity<ResponseData>(response, HttpStatus.OK);
+			payeeService.generateOtpForPayerAndSendMail(payee.getPayeeId());
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 	}
 
