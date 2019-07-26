@@ -20,6 +20,11 @@ import com.bank.hclbank.model.PayeeRequestModel;
 import com.bank.hclbank.service.AccountService;
 import com.bank.hclbank.service.PayeeService;
 
+import com.bank.hclbank.entity.Payee;
+import com.bank.hclbank.exception.ApplicationException;
+import com.bank.hclbank.repository.PayeeRepository;
+import com.bank.hclbank.service.PayeeService;
+
 @Service
 public class PayeeServiceImpl implements PayeeService {
 
@@ -28,6 +33,9 @@ public class PayeeServiceImpl implements PayeeService {
 	
 	@Autowired
 	AccountRepository accountRepository;
+	
+	@Autowired
+	PayeeRepository payeeRepository;
 	
 	@Override
 	public void addPayee(PayeeRequestModel payeeRequestModel) throws ApplicationException 
@@ -57,4 +65,24 @@ public class PayeeServiceImpl implements PayeeService {
 		return activePayeeList;
 	}
 
+	@Override
+	public Payee removePayee(Long payeeId) throws ApplicationException {
+		Payee payee=new Payee();
+		Optional<Payee> payeeList= payeeRepository.findById(payeeId);
+		
+		 if(payeeList.isPresent()) {
+			payee=payeeList.get();
+			
+			if(payee.getStatus().equals("inactive"))
+				throw new ApplicationException("Given Payee Id:"+payeeId+" is already removed");
+			else {
+				payee.setStatus("inactive");
+			}
+		}
+		else throw new ApplicationException("Please provide valid payee Id to be removed");
+		
+		return payee;
+		
+	}
+	
 }

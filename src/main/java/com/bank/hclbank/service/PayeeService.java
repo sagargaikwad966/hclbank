@@ -7,9 +7,13 @@ import org.springframework.stereotype.Service;
 import com.bank.hclbank.exception.ApplicationException;
 import com.bank.hclbank.model.PayeeRequestModel;
 import com.bank.hclbank.entity.Payee;
+import com.bank.hclbank.entity.Payee;
+import com.bank.hclbank.exception.ApplicationException;
 
 @Service
 public interface PayeeService {
+
+	public Payee removePayee(Long payeeId) throws ApplicationException;
 
 	void addPayee(PayeeRequestModel payeeRequestModel) throws ApplicationException;
 

@@ -4,7 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bank.hclbank.exception.ApplicationException;
@@ -30,55 +34,30 @@ import com.bank.hclbank.service.PayeeService;
 @RequestMapping("/payee")
 public class PayeeController 
 {
-	
+
 	@Autowired
 	PayeeService payeeService;
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
 	@PostMapping("/add")
 	public ResponseEntity<ResponseData> addPayee(@RequestBody PayeeRequestModel payeeRequestModel) throws ApplicationException
 	{
-		
+
 		payeeService.addPayee(payeeRequestModel);
 		return null;
-		
-	}
-	
-	
 
+	}
 
 	@GetMapping("/viewBeneficiaries/{userId}")
 	public ResponseEntity<ResponseData> viewBeneficiaries(@PathVariable(value = "userId") Long userId) throws ApplicationException {
@@ -92,5 +71,17 @@ public class PayeeController
 
 	}
 
+	@DeleteMapping("/removePayee")
+	public ResponseEntity<ResponseData> removePayee(@RequestParam Long payeeId) throws ApplicationException{
+
+		if(payeeId==null) 
+			throw new ApplicationException("Please provide payee Id to whom you want to remove..");
+
+		else{
+			Payee payee=payeeService.removePayee(payeeId);
+			ResponseData response = new ResponseData("Find below details of payee id :"+payeeId+" who is removed from the system", HttpStatus.OK,payee);
+			return new ResponseEntity<ResponseData>(response, HttpStatus.OK);
+		}
+	}
 
 }
