@@ -36,9 +36,6 @@ public class TransactionController
 	@PostMapping("/getPayee")
 	public ResponseEntity<ResponseData> getAllPayeeAccount(@RequestParam(value="accountNumber") Long accountNumber) throws Exception
 	{
-			if(accountNumber.equals(null))	
-				throw new ApplicationException("Please provide account number");
-			else {
 		      List<Account>	accountList = accountService.getAllPayeeAccount(accountNumber);
 		      if(!accountList.isEmpty()) {
 			    ResponseData response = new ResponseData("Please find below list of payees:", HttpStatus.OK,accountList);
@@ -46,7 +43,7 @@ public class TransactionController
 		      }
 		      else 
 		    	  throw new ApplicationException("There is no payee for this account number");
-		}
+		
 				
 	}
 	
