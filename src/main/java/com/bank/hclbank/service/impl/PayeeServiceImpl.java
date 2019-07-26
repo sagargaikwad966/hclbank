@@ -1,5 +1,6 @@
 package com.bank.hclbank.service.impl;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import com.bank.hclbank.repository.AccountRepository;
 import com.bank.hclbank.repository.PayeeRepository;
 import com.bank.hclbank.service.AccountService;
 import com.bank.hclbank.service.PayeeService;
+import com.bank.hclbank.utils.CommunicationUtils;
 
 @Service
 public class PayeeServiceImpl implements PayeeService 
@@ -37,9 +39,13 @@ public class PayeeServiceImpl implements PayeeService
 
 	@Autowired
 	PayeeRepository payeeRepository;
+	
+	@Autowired
+	CommunicationUtils communicationUtils;
 
 
-	public Payee addPayee(PayeeRequestModel payeeRequestModel) throws ApplicationException {
+	
+	public Payee addPayee(PayeeRequestModel payeeRequestModel) throws ApplicationException, NoSuchAlgorithmException {
 		List<Payee> payeeList = new ArrayList<>();
 		Payee requestedPayee = new Payee();
 
@@ -65,14 +71,16 @@ public class PayeeServiceImpl implements PayeeService
 				requestedPayee.setPayeeAccountNumber(payeeRequestModel.getPayeeAccountNumber());
 				requestedPayee.setPayerAccountNumber(payeeRequestModel.getPayerAccountNumber());
 				requestedPayee.setStatus("PENDING");
-				payeeRepository.save(requestedPayee);
+				requestedPayee = payeeRepository.save(requestedPayee);
+
 
 			}
 		} else {
 			requestedPayee.setPayeeAccountNumber(payeeRequestModel.getPayeeAccountNumber());
 			requestedPayee.setPayerAccountNumber(payeeRequestModel.getPayerAccountNumber());
 			requestedPayee.setStatus("PENDING");
-			payeeRepository.save(requestedPayee);
+			requestedPayee = payeeRepository.save(requestedPayee);
+			
 
 		}
 		return requestedPayee;
@@ -84,15 +92,15 @@ public class PayeeServiceImpl implements PayeeService
 	public Payee removePayee(Long payeeId) throws ApplicationException {
 		logger.info("In remove Payee");
 		Payee payee=new Payee();
-		Optional<Payee> payeeList= payeeRepository.findById(payeeId);
+		Optional<Payee> payeeOptional= payeeRepository.findById(payeeId);
 
-		if(payeeList.isPresent()) {
-			payee=payeeList.get();
+		if(payeeOptional.isPresent()) {
+			payee=payeeOptional.get();
 
-			if(payee.getStatus().equals("inactive"))
+			if(payee.getStatus().equalsIgnoreCase("INACTIVE"))
 				throw new ApplicationException("Given Payee Id:"+payeeId+" is already removed");
 			else {
-				payee.setStatus("inactive");
+				payee.setStatus("PENDING DELETE");
 			}
 		}
 		else throw new ApplicationException("Please provide valid payee Id to be removed");
@@ -118,5 +126,51 @@ public class PayeeServiceImpl implements PayeeService
 			}
 		} else 
 			throw new ApplicationException("User is invalid.");
+	}
+	
+
+	
+	public Boolean generateOtpForPayerAndSendMail(Long payeeId) throws ApplicationException, NoSuchAlgorithmException 
+	{
+		Optional<Payee> payeeOptional = payeeRepository.findById(payeeId);
+		boolean isOptionalPresent = payeeOptional.isPresent();
+		if (isOptionalPresent) {
+			Account payerAccNo = accountService.getAccountByAccountNumber(payeeOptional.get().getPayerAccountNumber());
+			String payerEmail = payerAccNo.getUser().getEmail();
+
+			Integer otp = communicationUtils.generateOTP(payerAccNo.getUser().getUserId());
+
+			communicationUtils.sendOtpViaMail(payerEmail, "OTP FOR ADDING PAYEE NO. "+payeeId, String.valueOf(otp));
+
+			return true;
+		  
+		 }
+		 return false;
+		}
+
+
+
+	@Override
+	public Payee getPayeeById(Long payeeid) throws ApplicationException {
+		Payee payee = new Payee();
+		Optional<Payee> payeeOptional = payeeRepository.findById(payeeid);
+		
+		boolean isOptionalPresent = payeeOptional.isPresent();
+		if (isOptionalPresent) 
+		{
+		 payee = payeeOptional.get();
+		}
+		else
+		{
+			throw new ApplicationException("Payee with "+payeeid+" id does not exist");
+		}
+		return payee;
+	}
+
+
+
+	@Override
+	public Payee updatePayee(Payee payee) {
+		return payeeRepository.save(payee);
 	}
 }

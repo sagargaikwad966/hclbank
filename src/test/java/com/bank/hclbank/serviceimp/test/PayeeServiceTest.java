@@ -18,10 +18,26 @@ import com.bank.hclbank.entity.Payee;
 import com.bank.hclbank.exception.ApplicationException;
 import com.bank.hclbank.repository.AccountRepository;
 import com.bank.hclbank.repository.PayeeRepository;
+import com.bank.hclbank.service.AccountService;
+import com.bank.hclbank.service.PayeeService;
 import com.bank.hclbank.service.impl.PayeeServiceImpl;
 
+
 @RunWith(MockitoJUnitRunner.class)
-public class PayeeServiceTest {
+public class PayeeServiceTest 
+{
+	@InjectMocks
+	PayeeService payeeService;
+	
+	@Mock
+	AccountService accountServiceMock;
+		
+	
+	@Test
+	public void testAddPayee()
+	{
+		
+	}
 
 	@InjectMocks
 	PayeeServiceImpl payeeServiceImpl;

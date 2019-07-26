@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class PayeeControllerTest {
 	}
 
 	@Test
-	public void testAddPayee() throws ApplicationException {
+	public void testAddPayee() throws ApplicationException, NoSuchAlgorithmException {
 
 		when(payeeServiceMock.addPayee(payeeRequestModel)).thenReturn(payee);
 		ResponseEntity<ResponseData> response =payeeControllerMock.addPayee(payeeRequestModel);
