@@ -15,6 +15,6 @@ public interface PayeeService {
 
 	public Payee addPayee(PayeeRequestModel payeeRequestModel) throws ApplicationException;
 
-	public List<Payee> viewBeneficiaries(Long userId);
+	public List<Payee> viewBeneficiaries(Long userId) throws ApplicationException;
 	
 }
