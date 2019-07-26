@@ -116,6 +116,6 @@ public class PayeeServiceImpl implements PayeeService
 				throw new ApplicationException("No Payees are added yet.");
 			}
 		} else 
-			throw new ApplicationException("No account info found for this user.");
+			throw new ApplicationException("User is invalid.");
 	}
 }
