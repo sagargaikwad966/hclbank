@@ -71,5 +71,4 @@ public class PayeeController
 			return new ResponseEntity<ResponseData>(response, HttpStatus.OK);
 		}
 	}
-
 }

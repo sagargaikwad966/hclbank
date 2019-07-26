@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.exception.ApplicationException;
+import com.bank.hclbank.model.ResponseData;
 import com.bank.hclbank.service.AccountService;
 import com.bank.hclbank.service.TransactionService;
 
@@ -30,21 +31,23 @@ public class TransactionController
 	 * This method is used to get all payee list for given user account number
 	 * @param accountNumber to fetch the all payee for this account number
 	 * @return List<Account> This returns List of all Payee Accounts
+	 * @throws Exception 
 	 */	
 	@PostMapping("/getPayee")
-	public ResponseEntity<?> getAllPayeeAccount(@RequestParam(value="accountNumber") Long accountNumber)
+	public ResponseEntity<ResponseData> getAllPayeeAccount(@RequestParam(value="accountNumber") Long accountNumber) throws Exception
 	{
-		List<Account> accountList;
-		try
-		{
-			accountList = accountService.getAllPayeeAccount(accountNumber);
-			
+			if(accountNumber.equals(null))	
+				throw new ApplicationException("Please provide account number");
+			else {
+		      List<Account>	accountList = accountService.getAllPayeeAccount(accountNumber);
+		      if(!accountList.isEmpty()) {
+			    ResponseData response = new ResponseData("Please find below list of payees:", HttpStatus.OK,accountList);
+			    return new ResponseEntity<>(response,HttpStatus.OK);
+		      }
+		      else 
+		    	  throw new ApplicationException("There is no payee for this account number");
 		}
-		catch(Exception e)
-		{
-			return new ResponseEntity<String>("Invalid request : "+e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<List<Account>>(accountList, HttpStatus.OK);
+				
 	}
 	
 	/**
