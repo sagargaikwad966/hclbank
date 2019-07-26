@@ -4,24 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.entity.Payee;
-import com.bank.hclbank.repository.AccountRepository;
-import com.bank.hclbank.repository.PayeeRepository;
-import com.bank.hclbank.service.PayeeService;
-
-import com.bank.hclbank.entity.Account;
 import com.bank.hclbank.exception.ApplicationException;
 import com.bank.hclbank.model.PayeeRequestModel;
+import com.bank.hclbank.repository.AccountRepository;
 import com.bank.hclbank.service.AccountService;
 import com.bank.hclbank.service.PayeeService;
 
 @Service
-public class PayeeServiceImpl implements PayeeService {
+public class PayeeServiceImpl implements PayeeService 
+{
+	
+	private static final Logger logger = LoggerFactory.getLogger(PayeeServiceImpl.class);
+
 
 	@Autowired
 	AccountService accountService;
@@ -35,8 +37,21 @@ public class PayeeServiceImpl implements PayeeService {
 		Account payerAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayerAccountNumber());
 		
 		Account payeeeAccount = accountService.getAccountByAccountNumber(payeeRequestModel.getPayeeAccountNumber());
+		List<Payee> payeeList = null;
+		
+		System.out.println(payeeList);
+		
+		/*
+		 * boolean isPayee = payeeList.stream().anyMatch(p ->
+		 * p.getPayeeAccount().getAccountNumber().equals(payeeRequestModel.
+		 * getPayeeAccountNumber()));
+		 * 
+		 * logger.debug("IsPresent"+ isPayee); System.out.println(isPayee);
+		 */
+		
 		
 	}
+
 	/**
 	 * @param userId
 	 * @return
@@ -55,6 +70,5 @@ public class PayeeServiceImpl implements PayeeService {
 			}
 		}
 		return activePayeeList;
-	}
-
+	}		
 }

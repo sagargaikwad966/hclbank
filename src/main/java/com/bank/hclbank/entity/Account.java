@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Data;
+import lombok.Getter;
 
 @Entity
 @Data
@@ -46,8 +47,7 @@ public class Account implements Serializable
 	@Column(name="balance", nullable = false)
 	private Double balance;
 	
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "payeeAccount")
-	List<Payee> payeeList;
+
 	
 	
 	

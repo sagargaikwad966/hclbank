@@ -6,7 +6,7 @@
 				pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n%throwable" />
 		</Console>
 
-		<RollingFile name="RollingFile" fileName="D:/USK/application.log"
+		<RollingFile name="RollingFile" fileName="D:/HCLBANK/logs/application.log"
 			filePattern="D:/USK/$${date:yyyy-MM}/application-%d{-dd-MMMM-yyyy}-%i.log.gz">
 			<PatternLayout>
 				<pattern>%d %p %C{1.} [%t] %m%n</pattern>
@@ -28,7 +28,7 @@
 		</Root>
 
 		<!-- LOG "com.com*" at TRACE level -->
-		<Logger name="com.ingbank.banking" level="trace"></Logger>
+		<Logger name="com.bank.hclbank" level="trace"></Logger>
 	</Loggers>
 
 </Configuration>
